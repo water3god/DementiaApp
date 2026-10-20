@@ -1,25 +1,43 @@
-import Image from "next/image";
+import { CalendarClock, Phone } from "lucide-react";
 import type { Contact } from "@/lib/data/contacts";
+import { buttonVariants } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import ContactAvatar from "@/components/contactAvatar";
+import { cn } from "@/lib/utils";
 
 export default function ContactCard({ contact }: { contact: Contact }) {
   return (
-    <div className="flex flex-col gap-3 rounded-lg border p-4">
-      <div className="flex items-center gap-4">
-        <Image
-          src={contact.imageUrl}
-          alt={`Photo of ${contact.name}`}
-          width={72}
-          height={72}
-          className="size-18 shrink-0 rounded-full object-cover"
-        />
-        <div>
-          <p className="text-lg font-semibold">{contact.name}</p>
-          <p className="text-sm text-muted-foreground">
-            {contact.relationship}
-          </p>
+    <Card>
+      <CardHeader className="flex items-center gap-4">
+        <ContactAvatar contact={contact} />
+        <div className="flex flex-col gap-1">
+          <CardTitle className="text-lg">{contact.name}</CardTitle>
+          <CardDescription>{contact.relationship}</CardDescription>
         </div>
-      </div>
-      <p className="text-sm leading-relaxed">{contact.description}</p>
-    </div>
+      </CardHeader>
+      <CardContent className="flex flex-1 flex-col gap-3">
+        <p className="max-w-prose leading-relaxed">{contact.about}</p>
+        <p className="flex items-center gap-2 text-muted-foreground">
+          <CalendarClock className="size-4 shrink-0" aria-hidden />
+          {contact.schedule}
+        </p>
+      </CardContent>
+      <CardFooter className="justify-end">
+        <a
+          href={`tel:${contact.phone.replace(/\s/g, "")}`}
+          className={cn(buttonVariants({ size: "lg" }), "w-full sm:w-auto")}
+        >
+          <Phone data-icon="inline-start" />
+          Call {contact.name}
+        </a>
+      </CardFooter>
+    </Card>
   );
 }
