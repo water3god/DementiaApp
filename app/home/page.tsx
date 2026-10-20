@@ -24,7 +24,17 @@ export default async function Home() {
           ))}
         </CardContent>
       </Card>
-      <Card className="aspect-4/3 shadow-lg" />
+      <Card className="aspect-4/3 shadow-lg" >
+          <CardHeader className="grid-cols-[1fr_auto]">
+            <CardTitle className="text-xl">TodoList</CardTitle>
+            <Link
+            href="/Todo"
+            className="text-sm text-muted-foreground hover:underline"
+          >
+            View all
+          </Link>
+          </CardHeader>
+      </Card>
       <Card className="col-span-2 aspect-8/3 shadow-lg" />
     </div>
   );
