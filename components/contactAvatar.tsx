@@ -1,6 +1,6 @@
 import type { Contact } from "@/lib/data/contacts";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 function initials(name: string) {
   return name

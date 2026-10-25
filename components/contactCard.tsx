@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import ContactAvatar from "@/components/contactAvatar";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 export default function ContactCard({ contact }: { contact: Contact }) {
   return (

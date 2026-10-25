@@ -1,9 +1,5 @@
-// Data access for the to-do list. Pages and components only call these
-// functions, so swapping the mock table for a real database only touches this file.
-//
-// Tasks are written by a family member or caregiver, from the patient's
-// point of view. Keep each one short and concrete.
 
+/* delete later */
 export type Task = {
   id: string;
   text: string;

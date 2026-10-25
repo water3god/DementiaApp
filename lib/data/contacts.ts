@@ -1,29 +1,15 @@
-// Data access for contacts. Pages and components only call these functions,
-// so swapping the mock table for a real database only touches this file.
-//
-// To go live: replace the bodies below with queries against your database
-// (e.g. `db.select().from(contacts)` with Drizzle, or `prisma.contact.findMany()`),
-// keeping the same signatures and return types.
-//
-// Contacts are written by a family member or caregiver, from the patient's
-// point of view. Keep each field short, warm, and in the present tense.
-
+/* delete later */
 export type ContactGroup = "family" | "friends" | "care";
 
 export type Contact = {
   id: string;
-  /** The name the patient actually calls them, e.g. "Maggie". */
   name: string;
   fullName: string;
-  /** Written from the patient's side, e.g. "Your daughter". */
   relationship: string;
   group: ContactGroup;
-  /** One or two concrete, familiar details that help the patient place them. */
   about: string;
-  /** When the patient sees or hears from them, e.g. "Visits every Sunday afternoon". */
   schedule: string;
   phone: string;
-  /** Public path or absolute URL. Remote hosts must be added to `images.remotePatterns` in next.config.ts. */
   imageUrl: string;
 };
 
@@ -33,7 +19,6 @@ export const contactGroups: { id: ContactGroup; label: string }[] = [
   { id: "care", label: "Care team" },
 ];
 
-// Ordered by closeness: the people the patient sees most come first.
 const mockContacts: Contact[] = [
   {
     id: "1",
