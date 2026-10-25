@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronRight, LayoutGrid } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import {
   Card,
   CardAction,
@@ -8,16 +8,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@/components/ui/empty";
 import ContactTile from "@/components/contactTile";
 import TodoList from "@/components/todoList";
+import WorldMap from "@/components/worldMapLoader";
 import { getContacts } from "@/lib/data/contacts";
+import { getPlaces } from "@/lib/data/places";
 import { getTasks } from "@/lib/data/todos";
 
 function ViewAll({ href }: { href: string }) {
@@ -30,7 +25,11 @@ function ViewAll({ href }: { href: string }) {
 }
 
 export default async function Home() {
-  const [contacts, tasks] = await Promise.all([getContacts(), getTasks()]);
+  const [contacts, tasks, places] = await Promise.all([
+    getContacts(),
+    getTasks(),
+    getPlaces(),
+  ]);
   const today = new Date().toLocaleDateString("en-US", {
     weekday: "long",
     month: "long",
@@ -74,18 +73,11 @@ export default async function Home() {
         </Card>
 
         <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Places</CardTitle>
+          </CardHeader>
           <CardContent>
-            <Empty className="border border-dashed">
-              <EmptyHeader>
-                <EmptyMedia variant="icon">
-                  <LayoutGrid />
-                </EmptyMedia>
-                <EmptyTitle>Coming soon</EmptyTitle>
-                <EmptyDescription>
-                  More features will appear here.
-                </EmptyDescription>
-              </EmptyHeader>
-            </Empty>
+            <WorldMap places={places} />
           </CardContent>
         </Card>
       </div>
