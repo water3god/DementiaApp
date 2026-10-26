@@ -11,6 +11,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { setTaskCompleted } from "@/app/actions/tasks";
 import type { Task } from "@/lib/data/todos";
 
 export default function TodoList({ tasks }: { tasks: Task[] }) {
@@ -18,13 +19,22 @@ export default function TodoList({ tasks }: { tasks: Task[] }) {
     () => new Set(tasks.filter((t) => t.completed).map((t) => t.id)),
   );
 
-  function toggle(id: string, checked: boolean) {
+  function mark(id: number, checked: boolean) {
     setDone((prev) => {
       const next = new Set(prev);
       if (checked) next.add(id);
       else next.delete(id);
       return next;
     });
+  }
+
+  async function toggle(id: number, checked: boolean) {
+    mark(id, checked);
+    try {
+      await setTaskCompleted(id, checked);
+    } catch {
+      mark(id, !checked); // Save failed: undo the checkmark.
+    }
   }
 
   if (tasks.length === 0) {

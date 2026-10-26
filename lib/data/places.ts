@@ -1,36 +1,20 @@
-/* delete later */
+import { createClient } from "@/lib/supabase/server";
+
 export type Place = {
-  id: string;
+  id: number;
   name: string;
   description: string;
   lat: number;
   lng: number;
 };
 
-const places: Place[] = [
-  {
-    id: "1",
-    name: "Home",
-    description: "Where you live",
-    lat: 40.7128,
-    lng: -74.006,
-  },
-  {
-    id: "2",
-    name: "Maggie's house",
-    description: "Your daughter lives here",
-    lat: 40.73,
-    lng: -73.99,
-  },
-  {
-    id: "3",
-    name: "Central Park",
-    description: "Where you like to walk",
-    lat: 40.7829,
-    lng: -73.9654,
-  },
-];
-
+// RLS limits every query to the signed-in user's own rows.
 export async function getPlaces(): Promise<Place[]> {
-  return places;
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("places")
+    .select("id, name, description, lat, lng")
+    .order("id");
+  if (error) throw error;
+  return data;
 }
