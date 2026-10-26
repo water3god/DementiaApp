@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { adminConfigError, createAdminClient } from "@/lib/supabase/admin";
 import { homeFor, type Role } from "@/lib/auth";
-import { MIN_PASSWORD_LENGTH, usernameToEmail } from "@/lib/patientLogin";
+import { isPatientEmail, MIN_PASSWORD_LENGTH, usernameToEmail } from "@/lib/patientLogin";
 
 export type AuthState = { error?: string; message?: string } | undefined;
 
@@ -51,6 +51,7 @@ export async function signup(_: AuthState, formData: FormData): Promise<AuthStat
   if (!name || !email || !password) {
     return { error: "Please fill in every field." };
   }
+  if (isPatientEmail(email)) return { error: "Please use your own email address." };
   if (password.length < MIN_PASSWORD_LENGTH) {
     return { error: `Use a password of at least ${MIN_PASSWORD_LENGTH} characters.` };
   }

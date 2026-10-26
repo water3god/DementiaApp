@@ -5,6 +5,12 @@ const PATIENT_EMAIL_DOMAIN = "patients.invalid";
 
 export const MIN_PASSWORD_LENGTH = 8;
 
+// Public sign-up must refuse this domain, or a caretaker account could take a
+// patient's login address.
+export function isPatientEmail(email: string) {
+  return email.trim().toLowerCase().endsWith(`@${PATIENT_EMAIL_DOMAIN}`);
+}
+
 export function usernameToEmail(username: string) {
   return `${username.trim().toLowerCase()}@${PATIENT_EMAIL_DOMAIN}`;
 }
