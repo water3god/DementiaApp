@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import type { ContactGroup } from "@/lib/data/contactGroups";
-import { signPhotos } from "@/lib/photos";
+import { photoUrl } from "@/lib/photos";
 
 export type Contact = {
   id: number;
@@ -26,7 +26,7 @@ type ContactRow = {
   photo_path: string;
 };
 
-function toContact(row: ContactRow, photoUrl?: string): Contact {
+function toContact(row: ContactRow): Contact {
   return {
     id: row.id,
     name: row.name,
@@ -36,7 +36,7 @@ function toContact(row: ContactRow, photoUrl?: string): Contact {
     about: row.about,
     schedule: row.schedule,
     phone: row.phone,
-    photoUrl,
+    photoUrl: photoUrl(row.photo_path),
   };
 }
 
@@ -49,7 +49,5 @@ export async function getContacts(patientId: string): Promise<Contact[]> {
     .eq("patient_id", patientId)
     .order("id");
   if (error) throw error;
-  const rows = data as ContactRow[];
-  const photos = await signPhotos(supabase, rows.map((row) => row.photo_path));
-  return rows.map((row) => toContact(row, photos.get(row.photo_path)));
+  return (data as ContactRow[]).map(toContact);
 }

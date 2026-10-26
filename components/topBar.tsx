@@ -3,6 +3,7 @@ import { CircleUser, Users } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { logout } from "@/app/actions/auth";
 import { getSession } from "@/lib/auth";
+import AutoRefresh from "@/components/autoRefresh";
 
 export default async function TopBar() {
   const session = await getSession();
@@ -15,6 +16,8 @@ export default async function TopBar() {
         </Link>
         {session ? (
           <div className="flex items-center gap-2">
+            {/* Every signed-in page renders the top bar, so this covers them all. */}
+            <AutoRefresh />
             {session.role === "caretaker" && (
               <Link href="/caretaker_view" className={buttonVariants({ variant: "ghost", size: "sm" })}>
                 <Users data-icon="inline-start" />

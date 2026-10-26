@@ -11,7 +11,6 @@ const EXTENSIONS: Record<string, string> = {
 export const PHOTO_TYPES = Object.keys(EXTENSIONS);
 // Vercel rejects request bodies over 4.5 MB.
 export const MAX_PHOTO_MB = 4;
-const SIGNED_URL_SECONDS = 60 * 60;
 
 type PhotoChange = { file: File } | { remove: true } | { error: string } | undefined;
 
@@ -53,14 +52,21 @@ export async function removePatientPhotos(client: SupabaseClient, patientId: str
   await removePhotos(client, (data ?? []).map((file) => `${patientId}/${file.name}`));
 }
 
-// The bucket is private, so pages get short-lived signed URLs. Maps path → URL.
-export async function signPhotos(client: SupabaseClient, paths: string[]) {
-  const urls = new Map<string, string>();
-  const unique = [...new Set(paths.filter(Boolean))];
-  if (!unique.length) return urls;
-  const { data } = await client.storage.from(BUCKET).createSignedUrls(unique, SIGNED_URL_SECONDS);
-  for (const entry of data ?? []) {
-    if (entry.path && entry.signedUrl) urls.set(entry.path, entry.signedUrl);
-  }
-  return urls;
+// The paths savePhoto creates: <patient id>/<random uuid>.<ext>.
+const PHOTO_PATH = /^[0-9a-f-]{36}\/[0-9a-f-]{36}\.(jpg|png|webp|gif)$/;
+
+export function isPhotoPath(path: string) {
+  return PHOTO_PATH.test(path);
+}
+
+// The bucket is private, so pages link to app/photos/[...path]/route.ts,
+// which checks access on every uncached request. Unlike signed URLs, these
+// never expire.
+export function photoUrl(path: string) {
+  return path ? `/photos/${path}` : undefined;
+}
+
+export async function downloadPhoto(client: SupabaseClient, path: string) {
+  const { data } = await client.storage.from(BUCKET).download(path);
+  return data;
 }
