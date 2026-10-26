@@ -1,9 +1,10 @@
 import AuthForm from "@/components/authForm";
+import Centered from "@/components/centered";
 
 export default function Signup() {
   return (
-    <div className="flex flex-1 items-center justify-center">
+    <Centered>
       <AuthForm mode="signup" />
-    </div>
+    </Centered>
   );
 }

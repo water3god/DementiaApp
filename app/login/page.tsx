@@ -1,4 +1,5 @@
 import AuthForm from "@/components/authForm";
+import Centered from "@/components/centered";
 
 export default async function Login({ searchParams }: PageProps<"/login">) {
   const { error } = await searchParams;
@@ -6,8 +7,8 @@ export default async function Login({ searchParams }: PageProps<"/login">) {
     error === "confirm" ? "That confirmation link didn't work. Try logging in, or sign up again." : undefined;
 
   return (
-    <div className="flex flex-1 items-center justify-center">
+    <Centered>
       <AuthForm mode="login" initialError={initialError} />
-    </div>
+    </Centered>
   );
 }
