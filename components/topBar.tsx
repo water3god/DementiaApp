@@ -11,7 +11,7 @@ export default async function TopBar() {
     <header className="sticky top-0 z-50 h-14 w-full border-b bg-background/80 backdrop-blur">
       <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-4 md:px-6">
         <Link href="/" className="font-heading text-base font-semibold">
-          Dementia App
+          Pocket Nurse
         </Link>
         {session ? (
           <div className="flex items-center gap-2">

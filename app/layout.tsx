@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Dementia App",
+  title: "Pocket Nurse",
   description: "Contacts and daily tasks, in one place.",
 };
 

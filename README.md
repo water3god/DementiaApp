@@ -1,4 +1,4 @@
-# Dementia App
+# Pocket Nurse
 
 Contacts, daily tasks and familiar places for people living with dementia, managed by their caretakers.
 
