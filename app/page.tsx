@@ -1,11 +1,6 @@
 import { redirect } from "next/navigation";
+import { getSession } from "@/lib/auth";
 
-export default function Main() {
-  const loggedIn = true;
-
-  if (loggedIn) {
-    redirect("/home");
-  } else {
-    redirect("/login");
-  }
+export default async function Main() {
+  redirect((await getSession()) ? "/home" : "/signup");
 }
