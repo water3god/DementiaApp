@@ -7,7 +7,9 @@ export default async function Home() {
   const contacts = await getContacts();
 
   return (
+    
     <div className="mx-auto grid w-full max-w-7xl grid-cols-2 gap-4 p-4">
+
       <Card className="aspect-4/3 shadow-lg">
         <CardHeader className="grid-cols-[1fr_auto]">
           <CardTitle className="text-xl">Contacts</CardTitle>
@@ -24,9 +26,10 @@ export default async function Home() {
           ))}
         </CardContent>
       </Card>
+
       <Card className="aspect-4/3 shadow-lg" >
           <CardHeader className="grid-cols-[1fr_auto]">
-            <CardTitle className="text-xl">TodoList</CardTitle>
+            <CardTitle className="text-xl">To-Do List</CardTitle>
             <Link
             href="/Todo"
             className="text-sm text-muted-foreground hover:underline"
@@ -35,7 +38,11 @@ export default async function Home() {
           </Link>
           </CardHeader>
       </Card>
+      
       <Card className="col-span-2 aspect-8/3 shadow-lg" />
+      
+      
+
     </div>
   );
 }
