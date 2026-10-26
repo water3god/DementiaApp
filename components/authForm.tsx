@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import Field from "@/components/field";
 import { login, signup } from "@/app/actions/auth";
 
 type Mode = "login" | "signup";
@@ -27,24 +27,13 @@ const copy = {
   },
   signup: {
     title: "Sign up",
-    description: "Create an account to get started.",
+    description: "Create a caretaker account.",
     submit: "Create account",
     switchText: "Already have an account?",
     switchLabel: "Log in",
     switchHref: "/login",
   },
 };
-
-function Field({ id, label, ...props }: { id: string; label: string } & React.ComponentProps<"input">) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-sm font-medium">
-        {label}
-      </label>
-      <Input id={id} name={id} required {...props} />
-    </div>
-  );
-}
 
 export default function AuthForm({
   mode,
@@ -67,15 +56,27 @@ export default function AuthForm({
       </CardHeader>
       <form action={formAction}>
         <CardContent className="flex flex-col gap-4">
-          {mode === "signup" && (
-            <Field id="name" label="Name" autoComplete="name" />
+          {mode === "signup" ? (
+            <>
+              <Field id="name" label="Name" autoComplete="name" required />
+              <Field id="email" label="Email" type="email" autoComplete="email" required />
+            </>
+          ) : (
+            <Field
+              id="identifier"
+              label="Email or username"
+              autoComplete="username"
+              autoCapitalize="none"
+              spellCheck={false}
+              required
+            />
           )}
-          <Field id="email" label="Email" type="email" autoComplete="email" />
           <Field
             id="password"
             label="Password"
             type="password"
             autoComplete={mode === "login" ? "current-password" : "new-password"}
+            required
           />
           {state?.error && (
             <p role="alert" className="text-sm text-destructive">

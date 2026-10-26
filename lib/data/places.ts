@@ -8,12 +8,13 @@ export type Place = {
   lng: number;
 };
 
-// RLS limits every query to the signed-in user's own rows.
-export async function getPlaces(): Promise<Place[]> {
+// RLS limits reads to the patient themselves and their caretaker.
+export async function getPlaces(patientId: string): Promise<Place[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("places")
     .select("id, name, description, lat, lng")
+    .eq("patient_id", patientId)
     .order("id");
   if (error) throw error;
   return data;

@@ -6,15 +6,28 @@ import {
   ItemDescription,
   ItemTitle,
 } from "@/components/ui/item";
-import ContactAvatar from "@/components/contactAvatar";
+import PersonAvatar from "@/components/personAvatar";
 
-export default function ContactTile({ contact }: { contact: Contact }) {
+// With onClick (caretaker view) the tile opens the edit menu instead of linking.
+export default function ContactTile({
+  contact,
+  onClick,
+}: {
+  contact: Contact;
+  onClick?: () => void;
+}) {
   return (
     <Item
-      render={<Link href="/contacts" />}
-      className="flex-col justify-center gap-3 py-4 text-center"
+      render={
+        onClick ? (
+          <button type="button" onClick={onClick} aria-label={`Edit ${contact.name}`} />
+        ) : (
+          <Link href="/contacts" />
+        )
+      }
+      className="flex-col justify-center gap-3 py-4 text-center [button]:cursor-pointer [button]:hover:bg-muted"
     >
-      <ContactAvatar contact={contact} />
+      <PersonAvatar name={contact.fullName} photoUrl={contact.photoUrl} />
       <ItemContent className="items-center gap-0.5">
         <ItemTitle className="text-base">{contact.name}</ItemTitle>
         <ItemDescription>{contact.relationship}</ItemDescription>

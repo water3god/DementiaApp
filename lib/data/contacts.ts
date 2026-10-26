@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
-
-export type ContactGroup = "family" | "friends" | "care";
+import type { ContactGroup } from "@/lib/data/contactGroups";
+import { signPhotos } from "@/lib/photos";
 
 export type Contact = {
   id: number;
@@ -11,14 +11,8 @@ export type Contact = {
   about: string;
   schedule: string;
   phone: string;
-  imageUrl: string;
+  photoUrl?: string;
 };
-
-export const contactGroups: { id: ContactGroup; label: string }[] = [
-  { id: "family", label: "Family" },
-  { id: "friends", label: "Friends and neighbors" },
-  { id: "care", label: "Care team" },
-];
 
 type ContactRow = {
   id: number;
@@ -29,10 +23,10 @@ type ContactRow = {
   about: string;
   schedule: string;
   phone: string;
-  image_url: string;
+  photo_path: string;
 };
 
-function toContact(row: ContactRow): Contact {
+function toContact(row: ContactRow, photoUrl?: string): Contact {
   return {
     id: row.id,
     name: row.name,
@@ -42,28 +36,20 @@ function toContact(row: ContactRow): Contact {
     about: row.about,
     schedule: row.schedule,
     phone: row.phone,
-    imageUrl: row.image_url,
+    photoUrl,
   };
 }
 
-// RLS limits every query to the signed-in user's own rows.
-export async function getContacts(): Promise<Contact[]> {
+// RLS limits reads to the patient themselves and their caretaker.
+export async function getContacts(patientId: string): Promise<Contact[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("contacts")
-    .select("id, name, full_name, relationship, contact_group, about, schedule, phone, image_url")
+    .select("id, name, full_name, relationship, contact_group, about, schedule, phone, photo_path")
+    .eq("patient_id", patientId)
     .order("id");
   if (error) throw error;
-  return (data as ContactRow[]).map(toContact);
-}
-
-export async function getContact(id: number): Promise<Contact | undefined> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("contacts")
-    .select("id, name, full_name, relationship, contact_group, about, schedule, phone, image_url")
-    .eq("id", id)
-    .maybeSingle();
-  if (error) throw error;
-  return data ? toContact(data as ContactRow) : undefined;
+  const rows = data as ContactRow[];
+  const photos = await signPhotos(supabase, rows.map((row) => row.photo_path));
+  return rows.map((row) => toContact(row, photos.get(row.photo_path)));
 }

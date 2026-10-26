@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project state
 
-This is a freshly scaffolded `create-next-app` project (Next.js 16.3, React 19.2, TypeScript, Tailwind CSS v4). No app-specific features, data layer, or test setup exist yet — `app/page.tsx` is still the default template page.
+Next.js 16.3, React 19.2, TypeScript, Tailwind CSS v4, Supabase. Two roles: caretakers (email sign-up, manage patients at `/caretaker_view`) and patients (username login, created by a caretaker, home at `/home`). The database schema and RLS policies live in `supabase/schema.sql`. There is no test setup.
 
 ## Commands
 
@@ -22,6 +22,8 @@ There is no test runner configured.
 
 - **App Router only** — routes live in `app/`. `app/layout.tsx` is the root layout; it loads Geist fonts via `next/font/google` and exposes them as the CSS variables `--font-geist-sans` / `--font-geist-mono`.
 - **Typed route helpers**: layouts/pages use the global `LayoutProps<"/">` / `PageProps<...>` types generated into `.next/types` by `next dev`/`next build`. If these types are missing, run the dev server or a build once.
-- **Tailwind v4** is configured CSS-first: there is no `tailwind.config.*`. Theme tokens are declared with `@theme inline` in `app/globals.css` (colors map to `--background`/`--foreground`, which switch on `prefers-color-scheme: dark`). PostCSS uses `@tailwindcss/postcss`.
+- **Tailwind v4** is configured CSS-first: there is no `tailwind.config.*`. Theme tokens are declared with `@theme inline` in `app/globals.css`. PostCSS uses `@tailwindcss/postcss`.
+- **Data flow**: reads live in `lib/data/*` (server, RLS-scoped); writes are server actions in `app/actions/*` returning `ActionResult` from `lib/formData.ts`. Patient account management uses the admin client (`lib/supabase/admin.ts`, needs `SUPABASE_SECRET_KEY`).
+- **Photos**: private `photos` storage bucket, objects under `<patientId>/`. Rows store `photo_path`; reads sign URLs via `lib/photos.ts`.
 - **Import alias**: `@/*` resolves to the repo root (e.g. `@/app/...`).
 - Next.js docs matching the installed version are in `node_modules/next/dist/docs/` (`01-app`, `02-pages`, `03-architecture`) — consult them before using Next APIs, since this version differs from older conventions.

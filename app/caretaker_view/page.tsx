@@ -1,32 +1,15 @@
-import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import PatientsManager from "@/components/patientsManager";
+import { requireRole } from "@/lib/auth";
+import { getPatients } from "@/lib/data/patients";
 
+export default async function CaretakerView() {
+  const session = await requireRole("caretaker");
+  const patients = await getPatients(session.id);
 
-export default function CaretakerView() {
-  return <div>
-    <Card className="aspect-4/3 shadow-lg">
-        <CardHeader className="grid-cols-[1fr_auto]">
-          <CardTitle className="text-xl">Patients</CardTitle>
-          <Link
-            href="/contacts"
-            className="text-sm text-muted-foreground hover:underline"
-          >
-            View all
-          </Link>
-        </CardHeader>
-        <CardContent className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto">
-           - similar to contact card except its for patients from the caretaker pov
-           - click on one of the patients will bring pop-up screen
-           - caretaker can type within the pop-up screen and push to-do list onto their end
-        </CardContent>
-
-    </Card>
-  </div>;
-
-   
-    
-};
-
-
-//npm run dev
-//http://localhost:3000
+  return (
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
+      <h1 className="font-heading text-2xl font-semibold tracking-tight">Patients</h1>
+      <PatientsManager patients={patients} />
+    </div>
+  );
+}

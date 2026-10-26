@@ -1,8 +1,11 @@
 import ContactCard from "@/components/contactCard";
-import { contactGroups, getContacts } from "@/lib/data/contacts";
+import { requireRole } from "@/lib/auth";
+import { contactGroups } from "@/lib/data/contactGroups";
+import { getContacts } from "@/lib/data/contacts";
 
 export default async function ContactsPage() {
-  const contacts = await getContacts();
+  const session = await requireRole("patient");
+  const contacts = await getContacts(session.id);
 
   return (
     <div className="flex w-full max-w-3xl flex-col gap-8">
