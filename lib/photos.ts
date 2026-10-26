@@ -9,7 +9,8 @@ const EXTENSIONS: Record<string, string> = {
   "image/gif": "gif",
 };
 export const PHOTO_TYPES = Object.keys(EXTENSIONS);
-export const MAX_PHOTO_MB = 5;
+// Vercel rejects request bodies over 4.5 MB.
+export const MAX_PHOTO_MB = 4;
 const SIGNED_URL_SECONDS = 60 * 60;
 
 type PhotoChange = { file: File } | { remove: true } | { error: string } | undefined;

@@ -204,7 +204,7 @@ create policy "Caretaker deletes places" on public.places
 -- first path segment is the patient's id, which the policies check.
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-values ('photos', 'photos', false, 5242880, array['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+values ('photos', 'photos', false, 4194304, array['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
 on conflict (id) do update set
   public = excluded.public,
   file_size_limit = excluded.file_size_limit,
